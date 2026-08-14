@@ -17,7 +17,7 @@ dependencies {
 ext {
     set("POM_GROUP", "com.alibaba")
     set("POM_ARTIFACT_ID", "arouter-register")
-    set("POM_VERSION", "1.5.3-SNAPSHOT")
+    set("POM_VERSION", "1.0.0")
 }
 
 group = extra["POM_GROUP"] as String
