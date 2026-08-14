@@ -9,7 +9,7 @@ def getSnapshotRepositoryUrl() {
 }
 
 def fullVersion() {
-    return hasProperty("SNAPSHOT") ? POM_VERSION + "-SNAPSHOT" : POM_VERSION
+    return hasProperty("SNAPSHOT") && !POM_VERSION.endsWith('-SNAPSHOT') ? POM_VERSION + "-SNAPSHOT" : POM_VERSION
 }
 
 def readPropertyFromProperties(String key) {
@@ -19,7 +19,11 @@ def readPropertyFromProperties(String key) {
     } catch (Exception e) {
         println("load local properties failed msg:${e.message}")
     }
-    return properties.getProperty(key)
+    def value = properties.getProperty(key)?.trim()
+    if (value?.size() >= 2 && ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'")))) {
+        return value[1..-2]
+    }
+    return value
 }
 
 def getRepositoryUsername() {
@@ -35,14 +39,18 @@ afterEvaluate {
 
         repositories {
             maven {
-                url = fullVersion().endsWith('-SNAPSHOT') ? getSnapshotRepositoryUrl() : getReleaseRepositoryUrl()
-                allowInsecureProtocol = true
-                credentials(HttpHeaderCredentials) {
-                    name = getRepositoryUsername()
-                    value = getRepositoryPassword()
-                }
-                authentication {
-                    header(HttpHeaderAuthentication)
+                def repositoryUrl = fullVersion().endsWith('-SNAPSHOT') ? getSnapshotRepositoryUrl() : getReleaseRepositoryUrl()
+                url = uri(repositoryUrl)
+
+                if (repositoryUrl?.toString()?.matches('https?://.*')) {
+                    allowInsecureProtocol = repositoryUrl.toString().startsWith('http://')
+                    credentials(PasswordCredentials) {
+                        username = getRepositoryUsername()
+                        password = getRepositoryPassword()
+                    }
+                    authentication {
+                        basic(BasicAuthentication)
+                    }
                 }
             }
         }

@@ -8,7 +8,7 @@ plugins {
 }
 
 dependencies {
-    implementation("com.android.tools.build:gradle:8.0.0")
+    implementation("com.android.tools.build:gradle:7.4.2")
     implementation("commons-codec:commons-codec:1.15")
     implementation("commons-io:commons-io:2.13.0")
     implementation("org.ow2.asm:asm-util:9.6")
@@ -17,8 +17,11 @@ dependencies {
 ext {
     set("POM_GROUP", "com.alibaba")
     set("POM_ARTIFACT_ID", "arouter-register")
-    set("POM_VERSION", "1.5.2")
+    set("POM_VERSION", "1.5.3-SNAPSHOT")
 }
+
+group = extra["POM_GROUP"] as String
+version = extra["POM_VERSION"] as String
 
 gradlePlugin {
     plugins {

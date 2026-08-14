@@ -4,7 +4,7 @@ plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("kapt")
-    id("com.alibaba.arouter.register")
+    // id("com.alibaba.arouter.register")
 }
 
 android {
@@ -26,7 +26,7 @@ android {
         }
     }
 
-    kotlin.jvmToolchain(jdkVersion = 11)
+    kotlin.jvmToolchain(jdkVersion = 17)
 }
 
 dependencies {
